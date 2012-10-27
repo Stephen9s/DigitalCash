@@ -1,0 +1,24 @@
+<div class= "Sign_Form">
+	<h1>Sign Up</h1>
+	<%= form_for(:user, :url => {:controller => 'users', :action => 'create'}) do |f| %>
+		<p>Username: <%= f.text_field :username %></p>
+		<p>E-mail: <%= f.text_field :email %></p>
+		<p>First Name: <%= f.text_field :f_name %></p>
+		<p>Last Name: <%= f.text_field :l_name %></p>
+		<p>Address: <%= f.text_field :address %></p>
+		<p>Mobile Phone: <%= f.text_field :phone_num %></p>
+		<p>DOB: <%= f.text_field :dob %></p>
+		<p>Gender: <%= f.select(:gender, [['Male', 'M'], ['Female', 'F'], ['Other', 'O']]) %></p>
+		<p>Password: <%= f.password_field :password %></p>		
+		<p>Confirm : <%= f.password_field :password_confirmation %></p>
+		<%= f.submit :Signup %>
+	<% end %>
+		
+	<% if @user.errors.any? %>
+		<ul class="signup_errors">
+			<% for message_error in @user.errors.full_messages %>
+			<li>* <%= message_error %></li>
+			<% end %>
+		</ul>
+	<% end %>
+</div>
