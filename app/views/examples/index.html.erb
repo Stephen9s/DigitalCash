@@ -1,0 +1,16 @@
+
+<h3>AES Example</h3>
+<%= form_for(:aes, :url => {:controller => 'examples', :action => 'aes'}) do |f| %>
+		<p>Key: <%= f.text_field :pass %></p>
+		<p>Msg: <%= f.text_field :msg %></p>
+		<%= f.submit "Submit" %>
+<% end %>
+
+<br/>
+<br/>
+
+<h3>RSA Example</h3>
+<%= form_for(:rsa, :url => {:controller => 'examples', :action => 'rsa'}) do |f| %>
+		<p>Msg: <%= f.text_field :msg %></p>
+		<%= f.submit "Submit" %>
+<% end %>

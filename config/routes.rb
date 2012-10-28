@@ -7,6 +7,10 @@ DigitalCash::Application.routes.draw do
   get "sessions/profile"
 
   get "sessions/setting"
+  
+  match "examples", :to => "examples#index"
+  match "examples/aes", :to => "examples#aes"
+  match "examples/rsa", :to => "examples#rsa"
 
   root :to => "sessions#login"
   match "signup", :to => "users#new"
