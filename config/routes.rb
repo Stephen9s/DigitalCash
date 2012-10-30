@@ -11,6 +11,7 @@ DigitalCash::Application.routes.draw do
   match "examples", :to => "examples#index"
   match "examples/aes", :to => "examples#aes"
   match "examples/rsa", :to => "examples#rsa"
+  match "examples/xor", :to => "examples#xor"
 
   root :to => "sessions#login"
   match "signup", :to => "users#new"

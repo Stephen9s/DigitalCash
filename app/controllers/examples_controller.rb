@@ -28,4 +28,14 @@ class ExamplesController < ApplicationController
       @dec = cipher_a.decrypt(@enc)
     end
   end
+  
+  def xor
+    if params[:xor]
+      @binary_0 = (params[:xor][:binary0].to_i).to_s(2)
+      @binary_1 = (params[:xor][:binary1].to_i).to_s(2)
+      @binary_result = (@binary_0.to_i(base=2) ^ @binary_1.to_i(base=2)).to_s(2)
+    else
+      @binary_result = "Error"
+    end
+  end
 end

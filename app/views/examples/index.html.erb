@@ -14,3 +14,13 @@
 		<p>Msg: <%= f.text_field :msg %></p>
 		<%= f.submit "Submit" %>
 <% end %>
+
+<br/>
+<br/>
+
+<h3>XOR Example</h3>
+<%= form_for(:xor, :url => {:controller => 'examples', :action => 'xor'}) do |f| %>
+		<p>Msg 1: <%= f.text_field :binary0 %></p>
+		<p>Msg 2: <%= f.text_field :binary1 %></p>
+		<%= f.submit "Submit" %>
+<% end %>
