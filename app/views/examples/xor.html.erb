@@ -1,4 +1,14 @@
 <h3>XOR Example</h3>
-Message 1: <%= @binary_0 %><br/><br/<br/>
-Message 2: <%= @binary_1 %><br/><br/<br/>
-XORed: <%= @binary_result %><br/><br/<br/>
+Message 1 (hex): <%= params[:xor][:binary0] %><br/><br/<br/>
+Message 2 (hex): <%= params[:xor][:binary1] %><br/><br/<br/>
+Message 1 (binary): <%= @binary_0 %><br/><br/<br/>
+Message 2 (binary): <%= @binary_1 %><br/><br/<br/>
+XORed (binary): <%= @binary_result %><br/><br/<br/>
+XORed (hex): <%= @hex_result %><br/><br/<br/>
+XORed (base64): <%= @base64_result %><br/><br/<br/>
+XORed (decode64 hex): <%= @decode64_result %><br/><br/<br/>
+XORed (decode64 hex to binary): <%= @decode64_result_to_binary %><br/><br/<br/>
+XORed (decode64 hex to binary, with message 2 removed): <%= @binary_xor_show_msg1 %><br/><br/<br/>
+XORed (decode64 hex to binary, with message 1 removed): <%= @binary_xor_show_msg2 %><br/><br/<br/>
+RSA (unpacked to hex): <%= @rsa_hex %><br/><br/<br/>
+RSA (packed to original): <%= @rsa_original %><br/><br/<br/>
