@@ -62,6 +62,22 @@ class ExamplesController < ApplicationController
       @pub_key = k.public_key
       @pri_key = k.private_key
       
+      cipher = Gibberish::RSA.new(@pub_key)
+      @enc = cipher.encrypt(@hex_result)
+      @key_enc = cipher.encrypt((@binary_1.to_i(base=2)).to_s(16))
+      
+      cipher_a = Gibberish::RSA.new(@pri_key)
+      @dec = cipher_a.decrypt(@enc)
+      
+      @msg_xor_dec = cipher_a.decrypt(@key_enc)
+      
+      # now we have @dec and @msg_xor_dec
+      # should equal @binary_0
+      @rsa_enc_hex_xor_to_binary = (@dec.hex).to_s(2)
+      @rsa_enc_message2_to_binary = (@msg_xor_dec.hex).to_s(2)
+      @decrypted_xor_binary = (@rsa_enc_hex_xor_to_binary.to_i(base=2) ^ @rsa_enc_message2_to_binary.to_i(base=2)).to_s(2)
+      @decrypted_xor = (@decrypted_xor_binary.to_i(base=2)).to_s(16)
+      
       @rsa_hex = @pri_key.unpack('H*').first
       @rsa_original = [@rsa_hex].pack('H*')
     else

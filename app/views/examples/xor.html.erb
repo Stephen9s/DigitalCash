@@ -12,3 +12,32 @@ XORed (decode64 hex to binary, with message 2 removed): <%= @binary_xor_show_msg
 XORed (decode64 hex to binary, with message 1 removed): <%= @binary_xor_show_msg2 %><br/><br/<br/>
 RSA (unpacked to hex): <%= @rsa_hex %><br/><br/<br/>
 RSA (packed to original): <%= @rsa_original %><br/><br/<br/>
+RSA (hex encrypted with RSA): <%= @enc %><br/><br/<br/>
+RSA (hex encrypted with RSA...decrypted with RSA private key): <%= @dec %><br/><br/><br/>
+
+An example of how the key_table should look (assume we use ONE identity pair):<br><br>
+
+Also, Message 1(hex) will be considered the message, and Message 2(hex) is considered to be the key. <br>
+Message 2(hex) will be encrypted by RSA here.<br>
+And XORed(hex) will be encrypted by RSA as well.<br><br><br>
+
+<table width='800'>
+	<tr>
+		<th>Serial</th>
+		<th>Identity String</th>
+		<th>Key encrypted with RSA</th>
+		<th>Message XORed with Key then encrypted with RSA</th>
+	</tr>
+	<tr>
+		<td>000000001</td>
+		<td>1</td>
+		<td><%= @key_enc %></td>
+		<td><%= @enc %></td>
+	</tr>
+</table><br><br><br>
+
+Now, we take the key, decrypt the RSA, and take the message XOR key and decrypt with RSA...<br><br>
+
+Should be the same as Message 1(hex) <br><br>
+
+Result: <%= @decrypted_xor %>
