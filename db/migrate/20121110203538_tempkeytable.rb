@@ -13,3 +13,8 @@ class Tempkeytable < ActiveRecord::Migration
     drop_table :temptransaction
   end
 end
+
+# => The temporary key table contains a temporary transaction object. It will be deleted after the merchant it sends it to the bank.
+# => Assume that Alice sends Bob a coin, and the coin sits in Bob's purse. Bob can cash it at a later time.
+# => Bob will need to generate an n-bit string that Alice will honor and give each corresponding half to Bob. This is the table.
+# => Basically, this table is exactly like the keytable, but only stores one half, and that half is STILL RSA encrypted, so Bob doesn't know ANYTHING.

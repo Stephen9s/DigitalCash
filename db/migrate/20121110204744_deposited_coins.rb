@@ -13,3 +13,5 @@ class DepositedCoins < ActiveRecord::Migration
     drop_table :deposited_coins
   end
 end
+
+# => This table contains the serial, amount, and a flag used to determine if the bank already caught the cheater once before, so it's not necessary to re-run the algorithms.

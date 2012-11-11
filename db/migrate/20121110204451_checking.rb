@@ -12,3 +12,5 @@ class Checking < ActiveRecord::Migration
     drop_table :checking_accounts
   end
 end
+
+# => Holds the person's money.
