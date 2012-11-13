@@ -11,7 +11,49 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121027181717) do
+ActiveRecord::Schema.define(:version => 20121113003712) do
+
+  create_table "checking_accounts", :force => true do |t|
+    t.integer "owner_id"
+    t.decimal "amount"
+  end
+
+  create_table "deposited_coins", :force => true do |t|
+    t.string  "serial"
+    t.decimal "amount"
+    t.integer "flag",   :default => 0
+  end
+
+  create_table "deposited_coins_keys", :force => true do |t|
+    t.string  "serial"
+    t.integer "identity_num"
+    t.string  "identity_half"
+  end
+
+  create_table "keys", :force => true do |t|
+    t.string  "serial"
+    t.integer "identity_num"
+    t.string  "key"
+    t.string  "msg_xor_key"
+  end
+
+  create_table "purses", :force => true do |t|
+    t.integer "owner_id"
+    t.integer "recipient_id"
+    t.string  "serial"
+    t.integer "denomination"
+  end
+
+  create_table "rsa_keys", :force => true do |t|
+    t.text "private_key"
+    t.text "public_key"
+  end
+
+  create_table "temptransactions", :force => true do |t|
+    t.string  "serial"
+    t.integer "identity_num"
+    t.string  "identity_half"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "username"

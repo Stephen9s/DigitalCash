@@ -1,6 +1,6 @@
 class Keytable < ActiveRecord::Migration
   def up
-    create_table :keytable do |t|
+    create_table :keys do |t|
       
       t.string :serial
       t.integer :identity_num

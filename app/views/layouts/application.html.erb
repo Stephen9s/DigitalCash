@@ -13,8 +13,8 @@
 		<%= link_to "Home", home_path %>
 		<% if session[:user_id] %>
 			<%= link_to "Examples", examples_path %>
-			<a href="">Create MOs</a>
-			<a href="">Send MOs</a>
+			<%= link_to "Account", assets_path %>
+			<%= link_to "Bank", bank_withdraw_path %>
 			<%= link_to "Log out", :controller => 'sessions', :action => 'logout' %>
 		<% end %>
 	</div>

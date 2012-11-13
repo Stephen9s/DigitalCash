@@ -10,8 +10,10 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     
     if @user.save
-      flash[:notice] = "Username successfull created!"
+      flash[:notice] = "Username successfully created!"
       flash[:color] = "valid"
+      
+      @new_account = CheckingAccount.create(:owner_id => @user.id, :amount => 1000)
       
       # if created, then don't ask them to create another one...
       # redirect to login

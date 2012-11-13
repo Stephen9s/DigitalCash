@@ -26,6 +26,11 @@ DigitalCash::Application.routes.draw do
   get "users/new"
   match "/users/:user" => "users#create"
   
+  resources :checking_accounts
+  match "/assets" => "assets#index"
+  
+  resources :purses
+  match "/bank/withdraw" => "bank#withdraw"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
