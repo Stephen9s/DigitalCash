@@ -16,121 +16,15 @@ Hex string packed back into ASCII : <%= @hex_string_packed %><br/><br/>
 	<th>key</th>
 	<th>msg xor key</th>
 	
-	<tr>
-		<td>1</td>
-		<td><%= @random_string %></td>
-		<td>1</td>
-		<td><%= @identity_key_01 %></td>
-		<td><%= @identity_xored_key_01 %></td>
-	</tr>
-	<tr>
-		<td>2</td>
-		<td><%= @random_string %></td>
-		<td>2</td>
-		<td><%= @identity_key_02 %></td>
-		<td><%= @identity_xored_key_02 %></td>
-	</tr>
-	<tr>
-		<td>3</td>
-		<td><%= @random_string %></td>
-		<td>3</td>
-		<td><%= @identity_key_03 %></td>
-		<td><%= @identity_xored_key_03 %></td>
-	</tr>
-	<tr>
-		<td>4</td>
-		<td><%= @random_string %></td>
-		<td>4</td>
-		<td><%= @identity_key_04 %></td>
-		<td><%= @identity_xored_key_04 %></td>
-	</tr>
-	
-	<tr>
-		<td>5</td>
-		<td><%= @random_string %></td>
-		<td>5</td>
-		<td><%= @identity_key_05 %></td>
-		<td><%= @identity_xored_key_05 %></td>
-	</tr>
-	<tr>
-		<td>6</td>
-		<td><%= @random_string %></td>
-		<td>6</td>
-		<td><%= @identity_key_06 %></td>
-		<td><%= @identity_xored_key_06 %></td>
-	</tr>
-	<tr>
-		<td>7</td>
-		<td><%= @random_string %></td>
-		<td>7</td>
-		<td><%= @identity_key_07 %></td>
-		<td><%= @identity_xored_key_07 %></td>
-	</tr>
-	<tr>
-		<td>8</td>
-		<td><%= @random_string %></td>
-		<td>8</td>
-		<td><%= @identity_key_08 %></td>
-		<td><%= @identity_xored_key_08 %></td>
-	</tr>
-	
-	<tr>
-		<td>9</td>
-		<td><%= @random_string %></td>
-		<td>9</td>
-		<td><%= @identity_key_09 %></td>
-		<td><%= @identity_xored_key_09 %></td>
-	</tr>
-	<tr>
-		<td>10</td>
-		<td><%= @random_string %></td>
-		<td>10</td>
-		<td><%= @identity_key_10 %></td>
-		<td><%= @identity_xored_key_10 %></td>
-	</tr>
-	<tr>
-		<td>11</td>
-		<td><%= @random_string %></td>
-		<td>11</td>
-		<td><%= @identity_key_11 %></td>
-		<td><%= @identity_xored_key_11 %></td>
-	</tr>
-	<tr>
-		<td>12</td>
-		<td><%= @random_string %></td>
-		<td>12</td>
-		<td><%= @identity_key_12 %></td>
-		<td><%= @identity_xored_key_12 %></td>
-	</tr>
-	
-	<tr>
-		<td>13</td>
-		<td><%= @random_string %></td>
-		<td>13</td>
-		<td><%= @identity_key_13 %></td>
-		<td><%= @identity_xored_key_13 %></td>
-	</tr>
-	<tr>
-		<td>14</td>
-		<td><%= @random_string %></td>
-		<td>10</td>
-		<td><%= @identity_key_14 %></td>
-		<td><%= @identity_xored_key_14 %></td>
-	</tr>
-	<tr>
-		<td>15</td>
-		<td><%= @random_string %></td>
-		<td>15</td>
-		<td><%= @identity_key_15 %></td>
-		<td><%= @identity_xored_key_15 %></td>
-	</tr>
-	<tr>
-		<td>16</td>
-		<td><%= @random_string %></td>
-		<td>16</td>
-		<td><%= @identity_key_16 %></td>
-		<td><%= @identity_xored_key_16 %></td>
-	</tr>
+	<% for i in 0..15 %>
+		<tr>
+			<td><%= i %></td>
+			<td><%= @random_string %></td>
+			<td><%= i %></td>
+			<td><%= @identity_keys[i] %></td>
+			<td><%= @identity_xored_keys[i] %></td>
+		</tr>
+	<% end %>
 </table>
 
 <br/></br/>
@@ -144,90 +38,18 @@ Bit string (Bob generates): <%= @bit_string %><br/><br/>
 	<th>serial</th>
 	<th>bob's half</th>
 	
-	<tr>
-		<td>1</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_01 %></td>
-	</tr>
-	<tr>
-		<td>2</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_02 %></td>
-	</tr>
-	<tr>
-		<td>3</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_03 %></td>
-	</tr>
-	<tr>
-		<td>4</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_04 %></td>
-	</tr>
-	
-	<tr>
-		<td>5</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_05 %></td>
-	</tr>
-	<tr>
-		<td>6</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_06 %></td>
-	</tr>
-	<tr>
-		<td>7</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_07 %></td>
-	</tr>
-	<tr>
-		<td>8</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_08 %></td>
-	</tr>
-	
-	<tr>
-		<td>9</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_09 %></td>
-	</tr>
-	<tr>
-		<td>10</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_10 %></td>
-	</tr>
-	<tr>
-		<td>11</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_11 %></td>
-	</tr>
-	<tr>
-		<td>12</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_12 %></td>
-	</tr>
-	
-	<tr>
-		<td>13</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_13 %></td>
-	</tr>
-	<tr>
-		<td>14</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_14 %></td>
-	</tr>
-	<tr>
-		<td>15</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_15 %></td>
-	</tr>
-	<tr>
-		<td>16</td>
-		<td><%= @random_string %></td>
-		<td><%= @identity_half_16 %></td>
-	</tr>
+	<% for i in 0..15 %>
+		<tr>
+			<td><%= i %></td>
+			<td><%= @random_string %></td>
+			<td><%= @identity_half[i] %></td>
+		</tr>
+	<% end %>
 </table>
 
 RSA Public: <%= @rsa_public_key %><br/></br/>
 RSA Private: <%= @rsa_private_key %>
+
+
+<br><br>
+<%= @identity_keys[1] %>

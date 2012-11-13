@@ -84,58 +84,22 @@ class BankController < ApplicationController
     # Repack hex string to see if everything is OK...
     @hex_string_packed = [@hex_string_to_str].pack('H*')
     
-     # 100 hex characters generated
-    @identity_key_01 = SecureRandom.hex(50)
-    @identity_xored_key_01 = (@identity_key_01.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
+    # Generate hash with keys for each identity
+    @identity_keys = Hash.new
     
-    @identity_key_02 = SecureRandom.hex(50)
-    @identity_xored_key_02 = (@identity_key_02.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
+    for i in 0..15
+      @identity_keys[i] = SecureRandom.hex(50)
+    end
     
-    @identity_key_03 = SecureRandom.hex(50)
-    @identity_xored_key_03 = (@identity_key_03.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
+    # Message XOR Key Hash
+    @identity_xored_keys = Hash.new
     
-    @identity_key_04 = SecureRandom.hex(50)
-    @identity_xored_key_04 = (@identity_key_04.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_05 = SecureRandom.hex(50)
-    @identity_xored_key_05 = (@identity_key_05.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_06 = SecureRandom.hex(50)
-    @identity_xored_key_06 = (@identity_key_06.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_07 = SecureRandom.hex(50)
-    @identity_xored_key_07 = (@identity_key_07.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_08 = SecureRandom.hex(50)
-    @identity_xored_key_08 = (@identity_key_08.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_09 = SecureRandom.hex(50)
-    @identity_xored_key_09 = (@identity_key_09.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_10 = SecureRandom.hex(50)
-    @identity_xored_key_10 = (@identity_key_10.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_11 = SecureRandom.hex(50)
-    @identity_xored_key_11 = (@identity_key_11.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_12 = SecureRandom.hex(50)
-    @identity_xored_key_12 = (@identity_key_12.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_13 = SecureRandom.hex(50)
-    @identity_xored_key_13 = (@identity_key_13.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_14 = SecureRandom.hex(50)
-    @identity_xored_key_14= (@identity_key_14.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_15 = SecureRandom.hex(50)
-    @identity_xored_key_15 = (@identity_key_15.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
-    @identity_key_16 = SecureRandom.hex(50)
-    @identity_xored_key_16 = (@identity_key_16.to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
-    
+    for i in 0..15
+      @identity_xored_keys[i] = (@identity_keys[i].to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
+    end
     
     # Reveal identity (from key 12)
-    @identity_revealed = [(@identity_key_12.to_i(16) ^ @identity_xored_key_12.to_i(16)).to_s(16)].pack('H*')
+    @identity_revealed = [(@identity_keys[11].to_i(16) ^ @identity_xored_keys[11].to_i(16)).to_s(16)].pack('H*')
     
     
     # Generate 12-bit (3)
@@ -147,104 +111,15 @@ class BankController < ApplicationController
     end
     
     # Get appropriate half if 0 or 1
+    @identity_half = Hash.new
     
-    if [@bit_string][0] == '1'
-      @identity_half_01 = @identity_xored_key_01
-    else
-      @identity_half_01 = @identity_key_01
+    for i in 0..15
+      if @bit_string[i] == '1'
+        @identity_half[i] = @identity_xored_keys[i]
+      else
+        @identity_half[i] = @identity_keys[i]
+      end
     end
-    
-    if [@bit_string][1] == '1'
-      @identity_half_02 = @identity_xored_key_02
-    else
-      @identity_half_02 = @identity_key_02
-    end
-    
-    if @bit_string[2] == '1'
-      @identity_half_03 = @identity_xored_key_03
-    else
-      @identity_half_03 = @identity_key_03
-    end
-    
-    if @bit_string[3] == '1'
-      @identity_half_04 = @identity_xored_key_04
-    else
-      @identity_half_04 = @identity_key_04
-    end
-    
-    if @bit_string[4] == '1'
-      @identity_half_05 = @identity_xored_key_05
-    else
-      @identity_half_05 = @identity_key_05
-    end
-    
-    if @bit_string[5] == '1'
-      @identity_half_06 = @identity_xored_key_06
-    else
-      @identity_half_06 = @identity_key_06
-    end
-    
-    if @bit_string[6] == '1'
-      @identity_half_07 = @identity_xored_key_07
-    else
-      @identity_half_07 = @identity_key_07
-    end
-    
-    if @bit_string[7] == '1'
-      @identity_half_08 = @identity_xored_key_08
-    else
-      @identity_half_08 = @identity_key_08
-    end
-    
-    if @bit_string[8] == '1'
-      @identity_half_09 = @identity_xored_key_09
-    else
-      @identity_half_09 = @identity_key_09
-    end
-    
-    if @bit_string[9] == '1'
-      @identity_half_10 = @identity_xored_key_10
-    else
-      @identity_half_10 = @identity_key_10
-    end
-    
-    if @bit_string[10] == '1'
-      @identity_half_11 = @identity_xored_key_11
-    else
-      @identity_half_11 = @identity_key_11
-    end
-    
-    if @bit_string[11] == '1'
-      @identity_half_12 = @identity_xored_key_12
-    else
-      @identity_half_12 = @identity_key_12
-    end
-    
-    if @bit_string[12] == '1'
-      @identity_half_13 = @identity_xored_key_13
-    else
-      @identity_half_13 = @identity_key_13
-    end
-    
-    if @bit_string[13] == '1'
-      @identity_half_14 = @identity_xored_key_14
-    else
-      @identity_half_14 = @identity_key_14
-    end
-    
-    if @bit_string[14] == '1'
-      @identity_half_15 = @identity_xored_key_15
-    else
-      @identity_half_15 = @identity_key_15
-    end
-    
-    if @bit_string[15] == '1'
-      @identity_half_16 = @identity_xored_key_16
-    else
-      @identity_half_16 = @identity_key_16
-    end
-    
-    
     
     render 'index'
   end
