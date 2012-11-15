@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(:version => 20121113003712) do
   end
 
   create_table "rsa_keys", :force => true do |t|
-    t.text "private_key"
-    t.text "public_key"
+    t.blob "private_key"
+    t.blob "public_key"
   end
 
   create_table "temptransactions", :force => true do |t|

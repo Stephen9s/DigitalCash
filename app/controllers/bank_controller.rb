@@ -1,5 +1,9 @@
 class BankController < ApplicationController
   
+  def index
+    
+  end
+  
   def withdraw
     
     ######################################################
@@ -11,6 +15,10 @@ class BankController < ApplicationController
     key = RsaKey.find(1)
     @rsa_public_key = key.public_key
     @rsa_private_key = key.private_key
+    
+    # Cipher object used to encrypt halves
+    cipher = Gibberish::RSA.new(@rsa_public_key)
+    decipher = Gibberish::RSA.new(@rsa_private_key)
     
     ######################################################
     #  RANDOM SERIAL #####################################
@@ -61,7 +69,7 @@ class BankController < ApplicationController
     ######################################################
     
     # We should retrieve the denomination from a form, but we can set it statically here
-    @denomination = 50
+    @denomination = params[:denomination]
     
     ######################################################
     #  FIND IDENTITY STRING ##############################
@@ -98,14 +106,25 @@ class BankController < ApplicationController
       @identity_xored_keys[i] = (@identity_keys[i].to_i(16) ^ @hex_string_to_str.to_i(16)).to_s(16)
     end
     
-    # Reveal identity (from key 12)
-    @identity_revealed = [(@identity_keys[11].to_i(16) ^ @identity_xored_keys[11].to_i(16)).to_s(16)].pack('H*')
+    ##########################################
+    #       DATABASE ENTRIES    ##############
+    ##########################################
     
     
-    # Generate 12-bit (3)
+    # Create new purse item
+    Purse.create(:owner_id => current_user.id, :recipient_id => 0, :serial => @random_string, :denomination => @denomination)
+    
+    # Save keys to database
+    for i in 0..15
+      Key.create(:serial => @random_string, :identity_num => i, :key => cipher.encrypt(@identity_keys[i]), :msg_xor_key => cipher.encrypt(@identity_xored_keys[i]))
+    end
+    
+    
+    # Generate 16-bit (2)
      
     @bit_string = ((SecureRandom.hex(2)).hex).to_s(2)
     
+    # This'll pad the 16-bit generator if the random hex string is less than 16 bits (leading zeroes are usually truncated)
     if @bit_string.length < 16
       @bit_string = @bit_string.center(16, "0")
     end
@@ -121,7 +140,25 @@ class BankController < ApplicationController
       end
     end
     
-    render 'index'
+    
+    
+    ############################
+    # PULL COIN FROM KEY TABLE #
+    ############################
+    
+    coin_keys = Key.find_all_by_serial('5f85a9')
+    
+    coin_keys.each do |coin_key|
+      left_half = coin_key.key
+      right_half = coin_key.msg_xor_key
+    
+      left_half = decipher.decrypt(left_half)
+      right_half = decipher.decrypt(right_half)
+    
+      @identity_revealed = [(left_half.to_i(16) ^ right_half.to_i(16)).to_s(16)].pack('H*')
+    end
+    
+    
   end
   
   def deposit

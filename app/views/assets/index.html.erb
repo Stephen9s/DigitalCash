@@ -14,3 +14,50 @@
 	</tr>
 </table>
 <br/></br/>
+<table>
+	<th>
+		Coins
+	</th>
+	<th>
+		Denomination
+	</th>
+	<% if @coins.size > 0 %>
+		<% @coins.each do |coin|%>
+			<tr>
+				<td><%= (coin.serial).upcase %></td>
+				<td>$<%= (coin.denomination) %></td>
+				<td>Send to...</td>
+			</tr>
+		<%end %>
+	<% else %>
+	<tr>
+		<td>No coins!</td>
+		<td> </td>
+	</tr>
+	<% end %>
+</table>
+
+
+<br/></br/>
+<table>
+	<th>
+		Received Coins
+	</th>
+	<th>
+		Denomination
+	</th>
+	<% if @coins_received.size > 0 %>
+		<% @coins_received.each do |coin|%>
+			<tr>
+				<td><%= (coin.serial).upcase %></td>
+				<td>$<%= (coin.denomination) %></td>
+				<td>Send to...</td>
+			</tr>
+		<%end %>
+	<% else %>
+	<tr>
+		<td>No coins!</td>
+		<td> </td>
+	</tr>
+	<% end %>
+</table>

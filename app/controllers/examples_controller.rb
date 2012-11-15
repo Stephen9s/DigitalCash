@@ -62,6 +62,9 @@ class ExamplesController < ApplicationController
       @pub_key = k.public_key
       @pri_key = k.private_key
       
+      key_create = RsaKey.create(:private_key => @pri_key.to_s, :public_key => @pub_key.to_s)
+      
+      
       cipher = Gibberish::RSA.new(@pub_key)
       @enc = cipher.encrypt(@hex_result)
       @key_enc = cipher.encrypt((@binary_1.to_i(base=2)).to_s(16))

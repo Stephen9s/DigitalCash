@@ -1,55 +1,6 @@
+<h1>Withdraw (Create Coin)</h1>
 
-Randomness!: <%= @random_string %><br/></br/>
-Binary ^ <%= @random_string_binary %><br/><br/>
-
-Demonination: $<%= @denomination %><br/><br/>
-Identity String: <%= @identity_string %><br/><br/>
-ID Converted to Hex <%= @hex_string %><br/><br/>
-Above converted to String: <%= @hex_string_to_str %><br/><br/>
-# of hex : <%= @hex_string_count %><br/><br/>
-Hex string packed back into ASCII : <%= @hex_string_packed %><br/><br/>
-
-<table>
-	<th>id</th>
-	<th>serial</th>
-	<th>identity num</th>
-	<th>key</th>
-	<th>msg xor key</th>
-	
-	<% for i in 0..15 %>
-		<tr>
-			<td><%= i %></td>
-			<td><%= @random_string %></td>
-			<td><%= i %></td>
-			<td><%= @identity_keys[i] %></td>
-			<td><%= @identity_xored_keys[i] %></td>
-		</tr>
-	<% end %>
-</table>
-
-<br/></br/>
-Revealed identity using row 12: <%= @identity_revealed %>
-<br/></br/>
-
-Bit string (Bob generates): <%= @bit_string %><br/><br/>
-
-<table>
-	<th>id</th>
-	<th>serial</th>
-	<th>bob's half</th>
-	
-	<% for i in 0..15 %>
-		<tr>
-			<td><%= i %></td>
-			<td><%= @random_string %></td>
-			<td><%= @identity_half[i] %></td>
-		</tr>
-	<% end %>
-</table>
-
-RSA Public: <%= @rsa_public_key %><br/></br/>
-RSA Private: <%= @rsa_private_key %>
-
-
-<br><br>
-<%= @identity_keys[1] %>
+<%= form_tag(bank_withdraw_path) do %>
+	<%= text_field_tag :denomination %>
+	<%= submit_tag "Submit" %>
+<% end %>

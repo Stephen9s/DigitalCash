@@ -31,6 +31,7 @@ DigitalCash::Application.routes.draw do
   
   resources :purses
   match "/bank/withdraw" => "bank#withdraw"
+  match "/bank" => "bank#index"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
