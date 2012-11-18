@@ -18,9 +18,11 @@
 			<%= link_to "Log out", :controller => 'sessions', :action => 'logout' %>
 		<% end %>
 	</div>
-	<div id="main">
-		<%= yield %>
+	
+	<div id="content">
+		<div id="main"><%= yield %></div>
 	</div>
+	<div class="clear_container"></div>
 	<div id="footer"></div>
 </div>
 </body>

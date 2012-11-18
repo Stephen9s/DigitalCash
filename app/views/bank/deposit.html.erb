@@ -1,0 +1,17 @@
+Bit string (Bob generates): <%= @bit_string %><br/><br/>
+
+<%= params[:coin][:serial] %>
+
+<% if @xored_hash %>
+	<table>
+	<th>id</th>
+	<th>hax0r</th>
+	
+	<% for i in 0..15 %>
+		<tr>
+			<td><%= i %></td>
+			<td><%= @xored_hash[i] %></td>
+		</tr>
+	<% end %>
+</table>
+<%end%>

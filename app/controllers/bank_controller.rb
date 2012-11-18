@@ -1,5 +1,7 @@
 class BankController < ApplicationController
   
+  before_filter :authenticate_user
+  
   def index
     
   end
@@ -17,8 +19,8 @@ class BankController < ApplicationController
     @rsa_private_key = key.private_key
     
     # Cipher object used to encrypt halves
-    cipher = Gibberish::RSA.new(@rsa_public_key)
-    decipher = Gibberish::RSA.new(@rsa_private_key)
+    public = Gibberish::RSA.new(@rsa_public_key)
+    private = Gibberish::RSA.new(@rsa_private_key)
     
     ######################################################
     #  RANDOM SERIAL #####################################
@@ -116,7 +118,7 @@ class BankController < ApplicationController
     
     # Save keys to database
     for i in 0..15
-      Key.create(:serial => @random_string, :identity_num => i, :key => cipher.encrypt(@identity_keys[i]), :msg_xor_key => cipher.encrypt(@identity_xored_keys[i]))
+      Key.create(:serial => @random_string, :identity_num => i, :key => private.encrypt(@identity_keys[i]), :msg_xor_key => private.encrypt(@identity_xored_keys[i]))
     end
     
     
@@ -146,16 +148,17 @@ class BankController < ApplicationController
     # PULL COIN FROM KEY TABLE #
     ############################
     
-    coin_keys = Key.find_all_by_serial('5f85a9')
+    coin_keys = Key.find_all_by_serial(@random_string)
     
     coin_keys.each do |coin_key|
       left_half = coin_key.key
       right_half = coin_key.msg_xor_key
     
-      left_half = decipher.decrypt(left_half)
-      right_half = decipher.decrypt(right_half)
+      left_half = private.decrypt(left_half)
+      right_half = private.decrypt(right_half)
     
       @identity_revealed = [(left_half.to_i(16) ^ right_half.to_i(16)).to_s(16)].pack('H*')
+      
     end
     
     
@@ -163,6 +166,126 @@ class BankController < ApplicationController
   
   def deposit
     
+    if params[:coin]
+      
+      retrieved_keys = Key.find_all_by_serial(params[:coin][:serial])
+
+      ##############################
+      #  GENERATE BIT STRING       #
+      ##############################
+      
+      @bit_string = ((SecureRandom.hex(2)).hex).to_s(2)
+      
+      # This'll pad the 16-bit generator if the random hex string is less than 16 bits (leading zeroes are usually truncated)
+      if @bit_string.length < 16
+        @bit_string = @bit_string.center(16, "0")
+      end
+      
+      #############################
+      # GET HALVES, PUT IN TEMP   #
+      #############################
+      
+      i = 0
+      
+      # Indexed hashed
+      temp_coin_with_half_keys = Hash.new
+      
+      retrieved_keys.each do |key|
+        
+        if @bit_string[i] == '1'
+          temp_coin_with_half_keys[i] = TempTransaction.new(:serial => key.serial, :identity_num => key.identity_num, :identity_half => key.msg_xor_key)
+        else
+          temp_coin_with_half_keys[i] = TempTransaction.new(:serial => key.serial, :identity_num => key.identity_num, :identity_half => key.key)
+        end
+        
+        i = i + 1
+        
+      end
+
+      
+      ##############################
+      #  CHECK IF SERIAL EXISTS    #
+      ##############################
+      serial_exists = DepositedCoin.find_by_serial(params[:coin][:serial])
+
+      if serial_exists
+        
+        key = RsaKey.find(1)
+        @rsa_private_key = key.private_key
+        private = Gibberish::RSA.new(@rsa_private_key)
+        
+        keys_that_bank_has = DepositedCoinsKey.find_all_by_serial(params[:coin][:serial])
+        
+        
+        @xored_hash = Hash.new
+        
+        @ZOMGHACKER = "HACKS"
+        
+        i = 0
+        
+        #@identity_revealed = [(left_half.to_i(16) ^ right_half.to_i(16)).to_s(16)].pack('H*')
+        
+        if serial_exists.flag == 0
+          
+          keys_that_bank_has.each do |key_that_bank_has|
+            
+            @xored_hash[i] = [(private.decrypt(key_that_bank_has.identity_half).to_i(16) ^ private.decrypt(temp_coin_with_half_keys[i].identity_half).to_i(16)).to_s(16)].pack('H*')
+            
+            if @xored_hash[i].size == 1
+              @xored_hash[i] = "NO INFO"
+            end
+            
+            key_that_bank_has.identity_half = @xored_hash[i]
+            key_that_bank_has.save
+            
+            i += 1
+            
+          end
+          
+          serial_exists.flag = 1
+          serial_exists.save
+          
+          retrieve_coin = Purse.find_by_serial(params[:coin][:serial])
+          retrieve_coin.recipient_id = 0
+          retrieve_coin.save
+          
+        else
+          hacker_found = DepositedCoinsKey.find_all_by_serial(params[:coin][:serial])
+          
+          i = 0
+          
+          hacker_found.each do |hacker|
+            @xored_hash[i] = hacker.identity_half
+            
+            i += 1
+          end
+          
+        end
+        
+      else
+        purse_coin = Purse.find_by_serial(params[:coin][:serial], :select => "denomination")
+        deposited_coin = DepositedCoin.create(:serial => params[:coin][:serial], :amount => purse_coin.denomination)
+        # flag is set to 0 automatically
+        
+        # Deposit hashes into permanent table
+        
+        for i in 0..15
+          h = DepositedCoinsKey.create(:serial => temp_coin_with_half_keys[i].serial, :identity_num => temp_coin_with_half_keys[i].identity_num, :identity_half => temp_coin_with_half_keys[i].identity_half)
+        end
+        
+      end
+      
+      #############################
+      # DESTRUCTION METHODS HERE  #
+      #############################
+      
+      #retrieved_keys.each { |o| o.destroy }
+      
+    else
+      redirect_to assets_path
+    end
+    
+   
   end
   
 end

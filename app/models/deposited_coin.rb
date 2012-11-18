@@ -1,3 +1,3 @@
 class DepositedCoin < ActiveRecord::Base
-  attr_accessible :serial, :amt, :flag
+  attr_accessible :serial, :amount, :flag
 end

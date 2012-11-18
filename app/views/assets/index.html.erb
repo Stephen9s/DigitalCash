@@ -26,7 +26,13 @@
 			<tr>
 				<td><%= (coin.serial).upcase %></td>
 				<td>$<%= (coin.denomination) %></td>
-				<td>Send to...</td>
+				<td>
+						<%= form_tag(:action => 'transfer_hands') do |f| %>
+						<%= select(:coin, "recipient_id", @account_holders.collect {|p| [ p.username, p.id ] }, {:prompt => 'Select Merchant'}) %>
+						<%= hidden_field(:coin, "serial", :value => coin.serial) %>
+						<%= submit_tag "Send Coin"%>
+						<% end %>
+				</td>
 			</tr>
 		<%end %>
 	<% else %>
@@ -46,12 +52,18 @@
 	<th>
 		Denomination
 	</th>
+	<th></th>
 	<% if @coins_received.size > 0 %>
 		<% @coins_received.each do |coin|%>
 			<tr>
 				<td><%= (coin.serial).upcase %></td>
 				<td>$<%= (coin.denomination) %></td>
-				<td>Send to...</td>
+				<td>
+					<%= form_tag(:controller => "bank", :action => 'deposit') do |f| %>
+						<%= hidden_field(:coin, "serial", :value => coin.serial) %>
+						<%= submit_tag "Deposit Coin"%>
+					<% end %>
+				</td>
 			</tr>
 		<%end %>
 	<% else %>

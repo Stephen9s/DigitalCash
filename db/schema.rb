@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(:version => 20121113003712) do
     t.blob "public_key"
   end
 
-  create_table "temptransactions", :force => true do |t|
+  create_table "temp_transactions", :force => true do |t|
     t.string  "serial"
     t.integer "identity_num"
     t.string  "identity_half"

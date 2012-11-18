@@ -10,7 +10,7 @@ class Tempkeytable < ActiveRecord::Migration
   end
 
   def down
-    drop_table :temptransaction
+    drop_table :temptransactions
   end
 end
 

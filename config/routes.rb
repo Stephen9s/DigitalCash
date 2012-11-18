@@ -28,10 +28,18 @@ DigitalCash::Application.routes.draw do
   
   resources :checking_accounts
   match "/assets" => "assets#index"
+  match "/assets/transfer" => "assets#transfer_hands"
   
   resources :purses
   match "/bank/withdraw" => "bank#withdraw"
   match "/bank" => "bank#index"
+  
+  resources :keys
+  resources :temptransactions
+  resources :deposited_coins_keys
+  resources :deposited_coins
+  match "/bank/deposit" => "bank#deposit"
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
