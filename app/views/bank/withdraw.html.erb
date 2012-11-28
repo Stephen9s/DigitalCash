@@ -37,15 +37,14 @@ Bit string (Bob generates): <%= @bit_string %><br/><br/>
 	<th>id</th>
 	<th>serial</th>
 	<th>bob's half</th>
+	<th>Signature verified</th>
 	
 	<% for i in 0..15 %>
 		<tr>
 			<td><%= i %></td>
 			<td><%= @random_string %></td>
 			<td><%= @identity_half[i] %></td>
+			<td><%= @identity_half_signature[i] %></td>
 		</tr>
 	<% end %>
 </table>
-
-RSA Public: <%= @rsa_public_key %><br/></br/>
-RSA Private: <%= @rsa_private_key %>

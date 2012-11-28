@@ -4,7 +4,8 @@ class Tempkeytable < ActiveRecord::Migration
       
       t.string :serial
       t.integer :identity_num
-      t.string :identity_half # the half that the merchant requests (at random)
+      t.blob :identity_half # the half that the merchant requests (at random)
+      t.blob :signed_half
       
     end
   end

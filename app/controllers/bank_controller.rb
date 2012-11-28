@@ -15,12 +15,9 @@ class BankController < ApplicationController
     # This key was PRE-GENERATED; can be changed, but ALL coins will encrypted with the same RSA public key.
     
     key = RsaKey.find(1)
-    @rsa_public_key = key.public_key
-    @rsa_private_key = key.private_key
-    
-    # Cipher object used to encrypt halves
-    public = Gibberish::RSA.new(@rsa_public_key)
-    private = Gibberish::RSA.new(@rsa_private_key)
+    pub_key = RSA::Key.new((key.modulus).to_i, (key.encryption).to_i)
+    pri_key = RSA::Key.new((key.modulus).to_i, (key.decryption).to_i)
+    k = RSA::KeyPair.new(pri_key, pub_key)
     
     ######################################################
     #  RANDOM SERIAL #####################################
@@ -118,7 +115,8 @@ class BankController < ApplicationController
     
     # Save keys to database
     for i in 0..15
-      Key.create(:serial => @random_string, :identity_num => i, :key => private.encrypt(@identity_keys[i]), :msg_xor_key => private.encrypt(@identity_xored_keys[i]))
+      Key.create(:serial => @random_string, :identity_num => i, :key => @identity_keys[i], :msg_xor_key => @identity_xored_keys[i],
+      :signed_key => k.sign(@identity_keys[i]), :signed_msg_xor_key => k.sign(@identity_xored_keys[i]))
     end
     
     
@@ -133,12 +131,16 @@ class BankController < ApplicationController
     
     # Get appropriate half if 0 or 1
     @identity_half = Hash.new
+    @identity_half_signature = Hash.new
     
     for i in 0..15
+      # msg_xor_key
       if @bit_string[i] == '1'
         @identity_half[i] = @identity_xored_keys[i]
+        @identity_half_signature[i] = k.verify(k.sign(@identity_xored_keys[i]), @identity_xored_keys[i])
       else
         @identity_half[i] = @identity_keys[i]
+        @identity_half_signature[i] = k.verify(k.sign(@identity_keys[i]), @identity_keys[i])
       end
     end
     
@@ -154,8 +156,9 @@ class BankController < ApplicationController
       left_half = coin_key.key
       right_half = coin_key.msg_xor_key
     
-      left_half = private.decrypt(left_half)
-      right_half = private.decrypt(right_half)
+      # No longer need to decrypt
+      #left_half = k.decrypt(left_half)
+      #right_half = k.decrypt(right_half)
     
       @identity_revealed = [(left_half.to_i(16) ^ right_half.to_i(16)).to_s(16)].pack('H*')
       
@@ -193,9 +196,9 @@ class BankController < ApplicationController
       retrieved_keys.each do |key|
         
         if @bit_string[i] == '1'
-          temp_coin_with_half_keys[i] = TempTransaction.new(:serial => key.serial, :identity_num => key.identity_num, :identity_half => key.msg_xor_key)
+          temp_coin_with_half_keys[i] = TempTransaction.new(:serial => key.serial, :identity_num => key.identity_num, :identity_half => key.msg_xor_key, :signed_half => key.signed_msg_xor_key)
         else
-          temp_coin_with_half_keys[i] = TempTransaction.new(:serial => key.serial, :identity_num => key.identity_num, :identity_half => key.key)
+          temp_coin_with_half_keys[i] = TempTransaction.new(:serial => key.serial, :identity_num => key.identity_num, :identity_half => key.key, :signed_half => key.signed_key)
         end
         
         i = i + 1
@@ -211,13 +214,15 @@ class BankController < ApplicationController
       if serial_exists
         
         key = RsaKey.find(1)
-        @rsa_private_key = key.private_key
-        private = Gibberish::RSA.new(@rsa_private_key)
+        pub_key = RSA::Key.new((key.modulus).to_i, (key.encryption).to_i)
+        pri_key = RSA::Key.new((key.modulus).to_i, (key.decryption).to_i)
+        k = RSA::KeyPair.new(pri_key, pub_key)
         
         keys_that_bank_has = DepositedCoinsKey.find_all_by_serial(params[:coin][:serial])
         
         
         @xored_hash = Hash.new
+        @verify_half_hash = Hash.new
         
         @ZOMGHACKER = "HACKS"
         
@@ -229,7 +234,8 @@ class BankController < ApplicationController
           
           keys_that_bank_has.each do |key_that_bank_has|
             
-            @xored_hash[i] = [(private.decrypt(key_that_bank_has.identity_half).to_i(16) ^ private.decrypt(temp_coin_with_half_keys[i].identity_half).to_i(16)).to_s(16)].pack('H*')
+            @xored_hash[i] = [(key_that_bank_has.identity_half.to_i(16) ^ (temp_coin_with_half_keys[i].identity_half).to_i(16)).to_s(16)].pack('H*')
+            @verify_half_hash[i] = k.verify(temp_coin_with_half_keys[i].signed_half, temp_coin_with_half_keys[i].identity_half)
             
             if @xored_hash[i].size == 1
               @xored_hash[i] = "NO INFO"

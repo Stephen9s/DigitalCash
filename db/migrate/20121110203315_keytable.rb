@@ -4,8 +4,10 @@ class Keytable < ActiveRecord::Migration
       
       t.string :serial
       t.integer :identity_num
-      t.string :key
-      t.string :msg_xor_key
+      t.blob :key
+      t.blob :msg_xor_key
+      t.blob :signed_key
+      t.blob :signed_msg_xor_key
       
     end
   end

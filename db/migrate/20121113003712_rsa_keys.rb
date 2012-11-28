@@ -1,8 +1,9 @@
 class RsaKeys < ActiveRecord::Migration
   def up
     create_table :rsa_keys do |t|
-      t.blob :private_key
-      t.blob :public_key
+      t.blob :modulus
+      t.blob :encryption
+      t.blob :decryption
     end
   end
 

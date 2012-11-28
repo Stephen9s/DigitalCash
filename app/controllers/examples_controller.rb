@@ -20,14 +20,18 @@ class ExamplesController < ApplicationController
   
   def rsa
     if params[:rsa]
-      k = Gibberish::RSA.generate_keypair(1024)
+      k = RSA::KeyPair.generate(1024)
       @pub_key = k.public_key
       @pri_key = k.private_key
-      cipher = Gibberish::RSA.new(k.public_key)
-      @enc = cipher.encrypt(params[:rsa][:msg])
+      #cipher = Gibberish::RSA.new(k.private_key)
+      #@enc = k.encrypt(params[:rsa][:msg])
       
-      cipher_a = Gibberish::RSA.new(k.private_key)
-      @dec = cipher_a.decrypt(@enc)
+      #cipher_a = Gibberish::RSA.new(k.private_key)
+      #@dec = k.decrypt(@enc)
+      
+      k_init = RSA::KeyPair.new(@pri_key, @pub_key)
+      @enc = k_init.encrypt(params[:rsa][:msg])
+      @dec = k_init.decrypt(@enc)
     end
   end
   
@@ -58,31 +62,38 @@ class ExamplesController < ApplicationController
       
       #@binary_result = binary #decimal #(binary.to_i(base=2))
       
-      k = Gibberish::RSA.generate_keypair(1024)
-      @pub_key = k.public_key
-      @pri_key = k.private_key
+      k2 = RSA::KeyPair.generate(1024)
+      #hash = k2.to_hash
+      keys = RsaKey.find(1)
+      pub_key = RSA::Key.new((keys.modulus).to_i, (keys.encryption).to_i)
+      pri_key = RSA::Key.new((keys.modulus).to_i, (keys.decryption).to_i)
+      @k = RSA::KeyPair.new(pri_key, pub_key)
       
-      key_create = RsaKey.create(:private_key => @pri_key.to_s, :public_key => @pub_key.to_s)
+      #key_create = RsaKey.create(:modulus => (hash[:n]).to_s, :encryption => (hash[:e]).to_s, :decryption => (hash[:d]).to_s)
       
+
+      #cipher = Gibberish::RSA.new(@pub_key)
+      @enc = @k.encrypt(@hex_result)
+      @key_enc = @k.encrypt((@binary_1.to_i(base=2)).to_s(16))
       
-      cipher = Gibberish::RSA.new(@pub_key)
-      @enc = cipher.encrypt(@hex_result)
-      @key_enc = cipher.encrypt((@binary_1.to_i(base=2)).to_s(16))
+      #cipher_a = Gibberish::RSA.new(@pri_key)
+      @signed_key = @k.sign((@binary_1.to_i(base=2)).to_s(16))
+      @signed_enc = @k.sign(@hex_result)
       
-      cipher_a = Gibberish::RSA.new(@pri_key)
-      @dec = cipher_a.decrypt(@enc)
+      @verified_key = @k.verify(@signed_key, (@binary_1.to_i(base=2)).to_s(16))
+      @verified_enc = @k.verify(@signed_enc, @hex_result)
       
-      @msg_xor_dec = cipher_a.decrypt(@key_enc)
+      @msg_xor_key = 
       
       # now we have @dec and @msg_xor_dec
       # should equal @binary_0
-      @rsa_enc_hex_xor_to_binary = (@dec.hex).to_s(2)
-      @rsa_enc_message2_to_binary = (@msg_xor_dec.hex).to_s(2)
-      @decrypted_xor_binary = (@rsa_enc_hex_xor_to_binary.to_i(base=2) ^ @rsa_enc_message2_to_binary.to_i(base=2)).to_s(2)
-      @decrypted_xor = (@decrypted_xor_binary.to_i(base=2)).to_s(16)
+      #@rsa_enc_hex_xor_to_binary = (@dec.hex).to_s(2)
+      #@rsa_enc_message2_to_binary = (@msg_xor_dec.hex).to_s(2)
+      #@decrypted_xor_binary = (@rsa_enc_hex_xor_to_binary.to_i(base=2) ^ @rsa_enc_message2_to_binary.to_i(base=2)).to_s(2)
+      @decrypted_xor = 'hey'#(@decrypted_xor_binary.to_i(base=2)).to_s(16)
       
-      @rsa_hex = @pri_key.unpack('H*').first
-      @rsa_original = [@rsa_hex].pack('H*')
+      @rsa_hex = @pri_key#.unpack('H*').first
+      @rsa_original = @rsa_hex#].pack('H*')
     else
       @binary_result = "Error"
     end

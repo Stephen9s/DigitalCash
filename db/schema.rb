@@ -33,8 +33,10 @@ ActiveRecord::Schema.define(:version => 20121113003712) do
   create_table "keys", :force => true do |t|
     t.string  "serial"
     t.integer "identity_num"
-    t.string  "key"
-    t.string  "msg_xor_key"
+    t.blob  "key"
+    t.blob  "msg_xor_key"
+    t.blob  "signed_key"
+    t.blob  "signed_msg_xor_key"
   end
 
   create_table "purses", :force => true do |t|
@@ -45,14 +47,16 @@ ActiveRecord::Schema.define(:version => 20121113003712) do
   end
 
   create_table "rsa_keys", :force => true do |t|
-    t.blob "private_key"
-    t.blob "public_key"
+    t.blob "modulus"
+    t.blob "encryption"
+    t.blob "decryption"
   end
 
   create_table "temp_transactions", :force => true do |t|
     t.string  "serial"
     t.integer "identity_num"
-    t.string  "identity_half"
+    t.blob  "identity_half"
+    t.blob    "signed_half"
   end
 
   create_table "users", :force => true do |t|
