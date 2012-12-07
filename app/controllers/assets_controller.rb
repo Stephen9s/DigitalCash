@@ -5,7 +5,7 @@ class AssetsController < ApplicationController
   def index
     
     # For populating drop-down menu
-    @account_holders = User.find(:all, :select => 'id, username')
+    @account_holders = User.find(:all, :select => 'id, username', :conditions => ["users.id != ?", current_user.id])
 
     
     begin 
@@ -45,6 +45,40 @@ class AssetsController < ApplicationController
       render 'transfer_hands'
     end
     
+  end
+  
+  def verify_coin
+      key = RsaKey.find(1)
+      pub_key = RSA::Key.new((key.modulus).to_i, (key.encryption).to_i)
+      pri_key = RSA::Key.new((key.modulus).to_i, (key.decryption).to_i)
+      k = RSA::KeyPair.new(pri_key, pub_key)
+      
+      keys = Hash.new
+      
+      for i in 0..15
+        keys[i] = Key.find_by_serial_and_identity_num(params[:serial], i)
+      end
+      
+      @serial = params[:serial]
+      
+      @verify_key_hash = Hash.new
+      @verify_msgxor_hash = Hash.new
+      
+      @always_true = false
+      
+      for i in 0..15
+        @verify_key_hash[i] = k.verify(keys[i].signed_key, keys[i].key)
+        @verify_msgxor_hash[i] = k.verify(keys[i].signed_msg_xor_key, keys[i].msg_xor_key)
+      
+        temp = (@verify_key_hash[i] == true) &&  (@verify_msgxor_hash[i] == true)
+        @always_true = (temp == true)      
+      end
+      
+      respond_to do | format |
+        format.html   { redirect_to assets_path }
+        format.js { [@always_true, @serial] }
+      end
+      
   end
   
 end

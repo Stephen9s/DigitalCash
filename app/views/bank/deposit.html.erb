@@ -1,11 +1,16 @@
-Bit string (Bob generates): <%= @bit_string %><br/><br/>
-
-<%= params[:coin][:serial] %>
-
+<table>
+	<tr>
+		<td>Bob's Generated Binary String:</td>
+		<td><%= @bit_string %></td>
+	</tr>
+</table>
+<br><br>
 <% if @xored_hash %>
+Coin <b><%= params[:coin][:serial] %></b> has been been deposited already.
 	<table>
-	<th>id</th>
-	<th>hax0r</th>
+	<th>ID</th>
+	<th>Coin Abuser</th>
+	<th>Valid coin?</th>
 	
 	<% for i in 0..15 %>
 		<tr>
@@ -15,4 +20,6 @@ Bit string (Bob generates): <%= @bit_string %><br/><br/>
 		</tr>
 	<% end %>
 </table>
+<% else %>
+Coin <b><%= params[:coin][:serial] %></b> has been successfully deposited!
 <%end%>

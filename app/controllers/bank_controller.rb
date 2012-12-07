@@ -132,15 +132,18 @@ class BankController < ApplicationController
     # Get appropriate half if 0 or 1
     @identity_half = Hash.new
     @identity_half_signature = Hash.new
+    @identity_half_signature_verified = Hash.new
     
     for i in 0..15
       # msg_xor_key
       if @bit_string[i] == '1'
         @identity_half[i] = @identity_xored_keys[i]
-        @identity_half_signature[i] = k.verify(k.sign(@identity_xored_keys[i]), @identity_xored_keys[i])
+        @identity_half_signature[i] = k.sign(@identity_xored_keys[i])
+        @identity_half_signature_verified[i] = k.verify(@identity_half_signature[i], @identity_xored_keys[i])
       else
         @identity_half[i] = @identity_keys[i]
-        @identity_half_signature[i] = k.verify(k.sign(@identity_keys[i]), @identity_keys[i])
+        @identity_half_signature[i] = k.sign(@identity_keys[i])
+        @identity_half_signature_verified[i] = k.verify(@identity_half_signature[i], @identity_keys[i])
       end
     end
     

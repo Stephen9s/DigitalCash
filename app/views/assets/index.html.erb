@@ -32,9 +32,16 @@
 						<%= hidden_field(:coin, "serial", :value => coin.serial) %>
 						<%= submit_tag "Send Coin"%>
 						<% end %>
+						
 				</td>
+				<td><%= button_to "Verify", {:controller => "assets", :action => "verify_coin", :serial => (coin.serial).downcase}, :method => "put", :remote => true %></td>
 			</tr>
 		<%end %>
+		<tr>
+			<td colspan="4" align="center">
+				<h2><span id="verify"></span></h2>
+			</td>
+		</tr>
 	<% else %>
 	<tr>
 		<td>No coins!</td>
@@ -42,7 +49,6 @@
 	</tr>
 	<% end %>
 </table>
-
 
 <br/></br/>
 <table>

@@ -29,6 +29,7 @@ DigitalCash::Application.routes.draw do
   resources :checking_accounts
   match "/assets" => "assets#index"
   match "/assets/transfer" => "assets#transfer_hands"
+  match "/assets/verify" => "assets#verify_coin"
   
   resources :purses
   match "/bank/withdraw" => "bank#withdraw"

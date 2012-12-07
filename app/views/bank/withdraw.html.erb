@@ -1,28 +1,38 @@
-
-Randomness!: <%= @random_string %><br/></br/>
-Binary ^ <%= @random_string_binary %><br/><br/>
-
-Demonination: $<%= @denomination %><br/><br/>
-Identity String: <%= @identity_string %><br/><br/>
-ID Converted to Hex <%= @hex_string %><br/><br/>
-Above converted to String: <%= @hex_string_to_str %><br/><br/>
-# of hex : <%= @hex_string_count %><br/><br/>
-Hex string packed back into ASCII : <%= @hex_string_packed %><br/><br/>
+<br><br>
+<table>
+	<tr>
+		<td>Serial:</td>
+		<td><%= @random_string %></td>
+	</tr>
+	<tr>
+		<td>Denomination:</td>
+		<td>$<%= @denomination %></td>
+	</tr>
+	<tr>
+		<td>Identity:</td>
+		<td><%= @identity_string %></td>
+	</tr>
+</table>
 
 <table>
-	<th>id</th>
-	<th>serial</th>
-	<th>identity num</th>
-	<th>key</th>
-	<th>msg xor key</th>
+	<th>ID</th>
+	<th>Serial</th>
+	<th>Identity Num</th>
+	<th>Key (Hex)</th>
+	<th>Identity String XORed with Key</th>
 	
 	<% for i in 0..15 %>
 		<tr>
 			<td><%= i %></td>
 			<td><%= @random_string %></td>
 			<td><%= i %></td>
-			<td><%= @identity_keys[i] %></td>
-			<td><%= @identity_xored_keys[i] %></td>
+			<% if i == 15 %>
+				<td>Coin verified!</td>
+				<td>Coin verified!</td>
+			<% else %>
+				<td><%= @identity_keys[i] %></td>
+				<td><%= @identity_xored_keys[i] %></td>
+			<% end %>
 		</tr>
 	<% end %>
 </table>
@@ -34,17 +44,19 @@ Revealed identity using row 12: <%= @identity_revealed %>
 Bit string (Bob generates): <%= @bit_string %><br/><br/>
 
 <table>
-	<th>id</th>
-	<th>serial</th>
-	<th>bob's half</th>
-	<th>Signature verified</th>
+	<th>ID</th>
+	<th>Serial</th>
+	<th>Bob's Half</th>
+	<th>Signature</th>
+	<th>Signature Verified</th>
 	
 	<% for i in 0..15 %>
 		<tr>
 			<td><%= i %></td>
 			<td><%= @random_string %></td>
 			<td><%= @identity_half[i] %></td>
-			<td><%= @identity_half_signature[i] %></td>
+			<td><%= @identity_half_signature[i]  %></td>
+			<td><%= @identity_half_signature_verified[i] %></td>
 		</tr>
 	<% end %>
 </table>

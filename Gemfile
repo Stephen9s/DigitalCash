@@ -22,6 +22,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'rails3-jquery-autocomplete'
 gem 'gibberish'
 gem 'rsa'
 # To use ActiveModel has_secure_password
