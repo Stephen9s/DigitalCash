@@ -265,7 +265,7 @@ class BankController < ApplicationController
           
           hacker_found.each do |hacker|
             @xored_hash[i] = hacker.identity_half
-            
+            @verify_half_hash[i] = k.verify(temp_coin_with_half_keys[i].signed_half, temp_coin_with_half_keys[i].identity_half)
             i += 1
           end
           

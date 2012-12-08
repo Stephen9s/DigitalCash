@@ -34,14 +34,9 @@
 						<% end %>
 						
 				</td>
-				<td><%= button_to "Verify", {:controller => "assets", :action => "verify_coin", :serial => (coin.serial).downcase}, :method => "put", :remote => true %></td>
+				
 			</tr>
 		<%end %>
-		<tr>
-			<td colspan="4" align="center">
-				<h2><span id="verify"></span></h2>
-			</td>
-		</tr>
 	<% else %>
 	<tr>
 		<td>No coins!</td>
@@ -70,8 +65,14 @@
 						<%= submit_tag "Deposit Coin"%>
 					<% end %>
 				</td>
+				<td><%= button_to "Verify", {:controller => "assets", :action => "verify_coin", :serial => (coin.serial).downcase}, :method => "put", :remote => true %></td>
 			</tr>
-		<%end %>
+		<%end %>		
+		<tr>
+			<td colspan="4" align="center">
+				<h2><span id="verify"></span></h2>
+			</td>
+		</tr>
 	<% else %>
 	<tr>
 		<td>No coins!</td>
