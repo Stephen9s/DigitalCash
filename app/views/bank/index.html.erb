@@ -1,3 +1,9 @@
+<% if flash[:notice] %>
+	  <p class="notice">
+	  	<%= flash[:notice] %>
+	  </p>
+	<% end %>
+
 <h1>Withdraw (Create Coin)</h1>
 
 <%= form_tag(bank_withdraw_path) do %>

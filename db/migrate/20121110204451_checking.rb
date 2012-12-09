@@ -3,7 +3,7 @@ class Checking < ActiveRecord::Migration
     create_table :checking_accounts do |t|
       
       t.integer :owner_id
-      t.decimal :amount # 1.50 or 2.23
+      t.integer :amount
       
     end
   end

@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(:version => 20121113003712) do
 
   create_table "checking_accounts", :force => true do |t|
     t.integer "owner_id"
-    t.decimal "amount"
+    t.integer "amount"
   end
 
   create_table "deposited_coins", :force => true do |t|
