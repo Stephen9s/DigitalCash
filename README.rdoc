@@ -1,1 +1,3 @@
-Sublime git test...
+Digital cash concept in Ruby. Not ideal, but written for Graduate Cryptography class. The concept involves sending payments that cannot be traced. All transactions are anonymous.
+
+This version is not anonymous, but a proof-of-concept that uses a database to keep track of who currently owns the cash. A user may own the coin now, and that coin can be passed along, but evidence of who created that coin is not apparent.
